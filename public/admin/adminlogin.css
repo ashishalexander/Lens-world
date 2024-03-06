@@ -1,0 +1,39 @@
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+.login-container {
+    margin-top: 100px;
+}
+
+.card {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.card-header {
+    background-color: #fefefe;
+    color: #830d73;
+    text-align: center;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}

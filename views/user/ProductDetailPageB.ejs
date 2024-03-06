@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/prtdtPg.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <%- include('userNav') %>
+    <div class="container">
+        <div class="row">
+            <!-- card left -->
+            <div class="col-lg-6">
+                <div class="product-imgs">
+                    <div class="img-display">
+                        <div class="img-showcase">
+                            <% dataproduct.imageUrl.forEach(element => { %>
+                                <img src="/<%= element %>" alt="glass image" style="width:100px" class="big_img">
+                            <% }) %>
+                           
+                        </div>
+                    </div>
+                    <div class="img-select">
+                        <% for (let i = 0; i < dataproduct.imageUrl.length; i++) { %>
+                            <div class="img-item">
+                                <a href="#" data-id="<%= i + 1 %>">
+                                    <img src="/<%= dataproduct.imageUrl[i] %>" alt="glass image">
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <!-- card right -->
+
+            <div class="col-lg-6">
+                <div class="product-content">
+                    <h2 class="product-title"><%= dataproduct.name %></h2>
+                    
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>4.7(21)</span>
+                    </div>
+
+                    <div class="product-price">
+                        <p class="new-price">Price:   <i class="fa-solid fa-indian-rupee-sign"></i>    <%= dataproduct.price %></p>
+                    </div>
+
+                    <div class="product-detail">
+                        <h2>about this item: </h2>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet veniam tempora fuga
+                            tenetur placeat sapiente architecto illum soluta consequuntur, aspernatur quidem at sequi
+                            ipsa!</p>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, perferendis eius.
+                            Dignissimos, labore suscipit. Unde.</p>
+                        <ul>
+                            <li>Color: <span>Black</span></li>
+                            <li>Brand: <span><%= dataproduct.brand %></span></li>
+                            <li>Category: <span><%= dataproduct.category %></span></li>
+                            <li>Shipping Area: <span>All over the world</span></li>
+                            <li>Shipping Fee: <span>Free</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="purchase-info">
+                        
+                        <a href="/cart/addCart/<%= dataproduct._id %>"><button type="button" class="btn btn-primary">
+                            Add to Cart <i class="fas fa-shopping-cart"></i>
+                        </button></a>
+                    </div>
+
+                    <div class="social-links">
+                        <p>Share At: </p>
+                        <a href="#" class="btn btn-outline-dark">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-dark">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-dark">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-dark">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-dark">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<%- include('userFooter') %>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+<script>
+    const imgs = document.querySelectorAll('.img-select a');
+    const imgBtns = [...imgs];
+    let imgId = 1;
+
+    imgBtns.forEach((imgItem) => {
+        imgItem.addEventListener('click', (event) => {
+            event.preventDefault();
+            imgId = imgItem.dataset.id;
+            slideImage();
+        });
+    });
+
+    function slideImage() {
+        const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
+
+        document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
+    }
+
+    window.addEventListener('resize', slideImage);
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('.big_img').imagezoomsl({
+        zoomrange: [3, 3]
+      });
+    })
+  </script>
+   <script src="/js/zoomsl.js"></script>
+   <script src="/js/zoomsl.min.js"></script>
+
+</html>

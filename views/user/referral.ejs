@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body{
+            background-color: rgb(220, 225, 228);
+        }
+        .rounded-card {
+            border-radius: 1rem;
+        }
+        /* Adjusted CSS for the button container */
+        .button {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button button {
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="height: 70vh;">
+            <div class="col-sm-6">
+                <div class="card rounded-card">
+                    <div class="card-body" style="height: 260px;">
+                        <form id="myForm">
+                            <div class="text text-center mb-2 mt-2">
+                                <h3>Please enter the referral code</h3>
+                                <small>If no, please click the cancel button</small>
+                            </div>
+                            <div class="mb-4 mt-3">
+                                <label for="inputField" class="form-label mb-3">Referral code</label>
+                                <input type="text" class="form-control" name="referralCode" id="inputField">
+                            </div>
+                            <div class="button mt-4">
+                                <button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+                                <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', async function(event) {
+            event.preventDefault(); // Prevent form submission
+            const formData = new FormData(document.getElementById('myForm'));
+            const referralCode = formData.get('referralCode'); 
+            const refereeId = '<%= JSON.stringify(refereeId) %>'; // Include refereeId from backend
+
+            console.log(refereeId)
+            console.log(referralCode);
+            try {
+                const response = await fetch('/referralPost', {
+                    method: 'POST', // or 'GET', 'PUT', 'DELETE'
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers as needed
+                    },
+                    body: JSON.stringify({ referralCode,refereeId }),
+                });
+                if(response.ok){
+                    const data = await response.json();
+                    console.log('Fetch request successful:', data);
+                    window.location.href = '/userLogin';
+                }
+                
+                // Handle response data here
+            } catch (error) {
+                console.error('Error during fetch request:', error);
+                // Handle errors here
+            }
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            // Redirect to a specific URL
+            window.location.href = '/userLogin'; // Change this URL to your desired destination
+        });
+    </script>
+
+</body>
+</html>

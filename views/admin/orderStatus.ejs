@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        .sidebar{
+            width:350px;
+            margin:0px;
+            /* height:120vh;  */
+            background-color: rgb(5, 5, 5);
+        }
+        a{
+            text-decoration: none;
+        }
+        p{
+            font-size: 19px;
+            
+        }
+        .btn-outline-info{
+            width: 100px;
+        }
+        
+    </style>
+    
+   
+</head>
+<body>
+    <%- include('adminNav') %>
+    <div class="container-fluid d-flex p-0">
+        <div class="container  sidebar ">
+            <div class="container sidebar-body">
+                <div class="sidebar-content">
+                    <div class="row ">
+                        <div class="col-12 col-sm-12 mt-4">
+                            <a href="#"><p id="home" style="color:rgb(255, 255, 255);" >Home</p></a>
+                        </div>
+                    </div>
+    
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/dashboard"><p style="color:rgb(255, 255, 255)">Dashboard</p></a>
+                        </div>
+                    </div>
+    
+                    <div class="row mt-3">
+                        <div class="col-3 col-sm-12 ">
+                            <a href="/admin/ProductMgm"><p style="color:rgb(255, 255, 255)">Product Management</p></a>
+                        </div>
+                    </div>
+            
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/usermgm"><p style="color:rgb(255, 255, 255)">User Management</p></a>
+                        </div>
+                    </div>
+    
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/categoryMgm"><p style="color:rgb(255, 255, 255)">Category Management</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/orderStatus"><p style="color:rgb(255, 255, 255)">Order Status</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/coupon/couponMgmSys"><p style="color:rgb(255, 255, 255)">Coupon Management</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/bannerMgm"><p style="color:rgb(255, 255, 255)">Banner Management</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/orderReturn"><p style="color:rgb(255, 255, 255)">order Return</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/logout"><p style="color:rgb(255, 255, 255)">Logout</p></a>
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-sm-12 p-0">
+                    <div class="heading text-center p-0 " style="background-color: rgb(233, 233, 232);height: 35px;margin: 0%;">
+                        <h3>Order Management </h3>
+                    </div>
+                    <% if(orderData.length<=0){%>
+    
+                    <%}else{%>
+                        <table id="myTable" class="table table-striped" style="width:100%">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">customer</th>
+                                    <th scope="col">Order Items</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total Price</th>
+                                    <th scope="col">Shipping Address</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">orderStatus</th>
+                                    <th scope="col">History</th>
+                                    <th scope="col">Payment Method</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orderData.forEach(element=>{ %>
+                                    <tr>
+                                        <td><%= element.customer.email %></td>
+                                        <td><% element.orderItems.forEach(element=>{ %>
+                                            <%= element.product._id %>
+                                            <br>
+                                            <br>
+                                            
+                                        <% }) %></td>
+                                        <td><% element.orderItems.forEach(element=>{ %>
+                                            <%= element.quantity %>
+                                            <br>
+                                            <br>
+                                            
+                                        <% }) %></td>
+                                        <td><%= element.totalPrice %></td>
+                                        <td><%= element.shippingAddress%></td>
+                                        <td><%= element.orderDate.toLocaleString() %></td>
+                                        <td>
+                                        <% element.orderItems.forEach(elementinner=>{ %>
+                                            <% if (elementinner.returnRequested==false && elementinner.status !='cancelled') { %>
+                                                <select class="order-status-dropdown" data-order-id="<%= element._id %>"  data-order-item-id="<%= elementinner._id %>">
+                                                    <option value="pending" <% if (elementinner.status === 'pending') { %>selected<% } %>>Pending</option>
+                                                    <option value="confirmed" <% if (elementinner.status === 'confirmed') { %>selected<% } %>>Confirmed</option>
+                                                    <option value="processing" <% if (elementinner.status === 'processing') { %>selected<% } %>>Processing</option>
+                                                    <option value="shipped" <% if (elementinner.status === 'shipped') { %>selected<% } %>>Shipped</option>
+                                                    <option value="delivered" <% if (elementinner.status === 'delivered') { %>selected<% } %>>Delivered</option>
+                                                </select>
+                                            <% }else{%>
+                                                <%= elementinner.status %>
+                                            <% } %>
+                                            <br>
+                                            <br>                                                    
+                                            </div>
+                                            
+                                        <%})%>
+                                        </td>
+                                        <td><% element.orderItems.forEach(element=>{ %>
+                                           <% element.orderStatusHistory.forEach(item=>{%>
+                                            <%= "status: "+item.status %>
+                                            <br>
+                                            <%= "updated on: "+item.updatedAt.toLocaleString() %>
+                                            <br>
+                                            <br>
+
+                                           <%}) %>
+                                            
+                                        <% }) %></td>
+                                        <td><%= element.paymentMethod %></td>
+        
+        
+                                    </tr>
+        
+                               <% }) %> 
+        
+                            </tbody>
+                        </table>
+                   <% } %>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdowns = document.querySelectorAll('.order-status-dropdown');    
+            dropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener('change', function () {
+                    const orderId = dropdown.dataset.orderId;
+                    const orderItemId = dropdown.dataset.orderItemId; // New addition
+                    const newStatus = dropdown.value;
+                    
+                    console.log(orderId,orderItemId,newStatus)
+                    // Send a fetch request to update the order status
+                    fetch('/admin/changeStatus', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            orderId: orderId,
+                            orderItemId: orderItemId,
+                            newStatus: newStatus,
+                        }),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to update order status');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Order status updated successfully:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error updating order status:', error);
+                    });
+                });
+            });
+        });
+    
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://kit.fontawesome.com/52f2c75ad6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    
+    
+    
+</head>
+<body>
+    <%- include("userNav") %>
+
+    <div class="container body-content">
+        <% if(bannerImgCorousel.isActive==true){%>
+          <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <% bannerImgCorousel.imageUrl.forEach(element => { %>
+                <div class="carousel-item active">
+                  <img src="/<%= element %>" class="d-block w-100" alt="...">
+                </div>
+              <% }) %>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <%} %>
+        
+
+        
+        <h3>Eyeglasses</h3>
+        <hr>
+        
+        <div class="row g-4 mb-4" >
+          <% const images=[
+            "images/lenskart-lk-e16376-c1-eyeglasses_img_1348_02_11_2023.jpg",
+            "images/john-jacobs-jj-e11729-c3-eyeglasses_g_3401.jpg",
+            "images/Grey-Full-Rim-Square-John-Jacobs-Rich-Acetate-JJ-E13360-C1-Eyeglasses_csvFile-1645276330917-G_8756.jpg"
+          ]; %>
+         <% for(let i=0; i<=2; i++){ %>
+            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                <div class="card h-100">
+  
+                      <img src="<%= images[i] %>" class="card-img-top" alt="...">
+                      
+                </div>
+              </div>
+         <% } %>
+
+        </div>
+
+        <h3>Sunglasses</h3>
+        <hr>
+        <div class="row g-4 mb-4">
+          <% const imgurl=[
+            "images/john-jacobs-jj-s12808-c2-sunglasses_g_8839.jpg",
+            "images/john-jacobs-jj-s13076-c2-sunglasses_G_1307.jpg",
+            "images/Gold-Brown-Full-Rim-Aviator--John-Jacobs-JJ-Tints-JJ-S12502-C3-Polarized-Sunglasses_john-jacobs-full-rim-aviator-jj-s12502-c3-sunglasses_sunglasses_g_2087_1_118_02_2022.jpg"
+          ]; %> 
+
+          <% imgurl.forEach(element => { %>
+            <div class="col-4 col-sm-4">
+              <div class="card h-100">
+                <img src="<%= element %>" class="card-img-top" alt="...">
+              </div>
+            </div>
+           
+          <% }) %>
+        </div>
+
+        <hr>
+        <% if(bannerImgfirst.isActive==true){%>
+          <div class="container p-0 mb-4">
+            <div row>
+              <% bannerImgfirst.imageUrl.forEach(element => { %>
+                <div class="col-12 col-sm-12">
+                  <img src="/<%= element %>" class="d-block w-100" >
+                </div>
+              <% }) %>
+              
+            </div>
+          </div>
+        <%} %>
+       
+
+        <h3>Computer Glasses</h3>
+        <hr>
+        <div class="row g-4 mb-4">
+          <% const imgcompurl=[
+            "images/john-jacobs-jj-e11735-c3-dupc-eyeglasses_g_123.jpg",
+            "images/blue-block-phone-&-computer-glasses_-light-blue-transparent-full-rim-round-lenskart-blu-lb-e14061-c1_lenskart-blu-lb-e14061-c1-eyeglasses_lenskart-blu-lb-e14061-c1-eyeglasses_eyegl.jpg",
+            "images/blue-block-phone-&-computer-glasses_-matte-grey-full-rim-square-lenskart-blu-lb-e13526-c3_vincent-chase-vc-e13526-c3-eyeglasses_g_841422_02_2022.jpg"
+          ]; %> 
+
+          <% imgcompurl.forEach(element => { %>
+            <div class="col-4 col-sm-4">
+              <div class="card h-100">
+                <img src="<%= element %>" class="card-img-top" alt="...">
+              </div>
+            </div>
+           
+          <% }) %>
+        </div>
+
+        <h3>Kids Glasses</h3>
+        <hr>
+        <div class="row g-4 mb-4">
+          <% const imgkidurl=[
+            "images/green-transparent-full-rim-round-kids-2-5-yrs-flexi-hooper-hp-e15973s-c1-eyeglasses_g_9108_17_08_2023.jpg",
+            "images/hooper-hp-e15910m-c1-eyeglasses_g_1936_12_09_2023.jpg",
+            "images/hooper-hp-e15913l-c1-eyeglasses_g_1913_12_09_2023.jpg"
+          ]; %> 
+
+          <% imgkidurl.forEach(element => { %>
+            <div class="col-4 col-sm-4">
+              <div class="card h-100">
+                <img src="<%= element %>" class="card-img-top" alt="...">
+              </div>
+            </div>
+           
+          <% }) %>
+        </div>
+        <hr>
+        <% if(bannerImgSecond.isActive==true){%>
+          <div class="row g-4 mb-4">
+            <% bannerImgSecond.imageUrl.forEach(element => { %>
+              <div class="col-12 col-sm-12">
+                <div class="card h-100">
+                  <img src="/<%= element %>" class="card-img-top" alt="...">
+                </div>
+              </div>
+             
+            <% }) %>
+          </div>
+        <%} %>
+        
+        <hr>
+        
+
+      </div>
+      
+    </div>
+
+    <div class="container-fluid footer p-4">
+      <div class="row">
+        <div class="col-12 col-sm-12">
+          <p><h3>Buy The Best Eyewear From Lensworld</h3></p>
+          <hr style="color: rgb(255, 255, 255);">
+        </div>
+        <div class="col-12 col-sm-12">
+          <p>Lensworld Is The Leading E-Commerce Portal For Eyewear In India. It Has Revolutionized The Eyewear Industry In The Country With Its Omni-Channel Approach. From An Ever-Growing Number Of Offline Stores Across Major Cities In The Country To Innovative Integration Of Technology While Purchasing Online, Lensworld Caters To Every Customer With Several Deals And Offers.<br><br>
+            A One-Stop Online Solution For Purchasing Eyewear And Its Accessories, Lensworld Delivers Them Right At Your Doorstep With Convenient Methods Of Payment. Sunglasses as well as Eyeglasses Are Available For Men And Women In A Diverse Array Of Styles And Trendy Colours. If You Want To Try Out Contact Lenses, Pick The Ones Of Your Choice From The Extensive Variety Of Coloured Contact Lenses From Our Online Store.
+          </p>
+          <hr style="color: rgb(255, 255, 255);">
+        </div>
+        <div class="row" >
+          <div class="col-6 col-sm-4 col-md-2">
+            
+            <ul class="items">
+              <li class="mb-2">
+                <h5>Services</h5>
+              </li>
+              <li class="mb-2">
+                <a >Frame Size</a>
+              </li>
+              <li class="mb-2">
+                <a >Store Locator</a>
+              </li>
+              <li class="mb-2">
+                <a >Buying Guide</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-6 col-sm-4 col-md-2">
+            <ul class="items">
+              <li class="mb-2">
+                <h5>About US</h5>
+              </li>
+              <li class="mb-2">
+                <a >We Are Hiring</a>
+              </li>
+              <li class="mb-2">
+                <a >Refer and Earn</a>
+              </li>
+              <li class="mb-2">
+                <a >LensWorld Coupon</a>
+              </li>
+            </ul>
+
+          </div>
+          <hr style="color: rgb(255, 255, 255);">
+        </div>
+
+
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <%- include('../user/userNav') %>
+    <div class="container-fluid d-flex">
+        <%- include('profileSidebar') %>
+        <% if(orderdetails.length<=0){%>
+            <script>        
+                Swal.fire({
+                    title: "You haven't placed any orders yet.",
+                    icon: 'info',
+                    showCancelButton: false,
+                    confirmButtonText: 'continue Shoping',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to the order page
+                        window.location.href = '/userDashboard'; // Replace '/order-page' with the desired URL
+                    }
+                });
+            </script>
+        <%}else{%>
+            <div class="right container-fluid">
+                <table id="example" class="table table-striped" style="width:100%">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Brand</th>
+                            <th scope="col" class="text-center">Address</th>
+                            <th scope="col">Order Date</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Invoice</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orderdetails.forEach(order => { %>
+                            <% order.orderItems.forEach(item => { %>
+                                <tr style="height:80px;">
+                                    <td class="align-middle"><img src="/<%= item.product.imageUrl[0] %>" alt="Product Image" height="50"></td>
+                                    <td class="align-middle"><%= item.product.name %></td>
+                                    <td class="align-middle"><%= item.product.brand %></td>
+                                    <td class="align-middle"><%= order.shippingAddress %></td>
+                                    <td class="align-middle"><%= order.orderDate.toLocaleString() %></td>
+                                    <td class="align-middle text-center"><%= item.quantity %></td>
+                                    <td class="align-middle"><%= item.price %></td>
+                                    <td class="align-middle"><%= item.status %></td>
+                                    <td style="vertical-align: middle;">
+                                        <% if (item.status!='pending') { %>
+                                            <a href="/profile/downloadinvoice/<%= order._id %>"><%= order._id.toString().slice(-5) %></a>
+                                       <% } %>
+                                    </td>
+                                    
+                                    <% if (item.status == "delivered") { %>
+                                        <td class="align-middle">
+                                            <button type="button" class="btn btn-danger" onclick="returnOrder('<%= order._id %>','<%= item.product._id %>','<%= item._id %>')">Return</button>
+                                        </td>
+                                    <% } else if (item.status == "pending") { %>
+                                        <td class="align-middle">
+                                            <button type="button" id="rzp-button1" class="btn btn-warning" style="width:70px;" onclick="createRazorpayOrder('<%= order._id %>','<%= item.price %>','<%= item._id%>')">Pay</button>
+                                        </td>
+                                    <% } else if (item.isCanceled === false && item.status != 'returned' && item.status != 'return-requested' && item.status != 'cancelled') { %>
+                                        <td class="align-middle">
+                                            <button type="button" class="btn btn-danger" onclick="cancelOrder('<%= order._id %>','<%= item.product._id %>')">Cancel</button>
+                                        </td>
+                                    <% } %>
+                                </tr>
+                            <% }) %>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div>
+    <%- include('../user/userFooter') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        async function createRazorpayOrder(orderId,totalPrice,orderItemId) {
+            try {
+                console.log(orderItemId,totalPrice,orderItemId)
+                const response = await fetch(`/profile/pendingOrders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderId: orderId,
+                        totalPrice: totalPrice,
+                        orderItemId:orderItemId, 
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create Razorpay order');
+                }
+
+                const data = await response.json();
+
+                if (!data ) {
+                    throw new Error('Invalid response from server');
+                }
+
+                var options = {
+                    "key": "rzp_test_Go829W6FzY8Q7j",
+                    "amount": totalPrice*100, // Amount is in currency subunits. Here, assuming totalPrice is in the smallest currency unit (e.g., paisa for INR)
+                    "currency": "INR",
+                    "name": "Lens World",
+                    "description": "Test Transaction",
+                    "image": "https://example.com/your_logo",
+                    "order_id": data.id,
+                    "callback_url":"/profile/pendingPaymentCapture",
+                    "prefill": {
+                        "name": "Ashish Alexander",
+                        "email": "ashishalex29@gmail.com",
+                        "contact": "7994929152"
+                    },
+                    "notes": {
+                        "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+
+            } catch (error) {
+                console.error('Error creating Razorpay order:', error);
+            }
+        }
+
+        async function cancelOrder(orderId, productId) {
+            try {
+                const response = await fetch(`/profile/myOrders/cancel/${orderId}/${productId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to cancel order');
+                }
+
+                const data = await response.json();
+                console.log('Order cancelled successfully', data);
+                window.location.reload(true);
+
+            } catch (error) {
+                console.error('Error cancelling order:', error);
+            }
+        }
+
+        async function returnOrder(orderId, productId, orderItemId) {
+            try {
+                const { value: reason } = await Swal.fire({
+                    title: 'Enter Return Reason',
+                    input: 'text',
+                    inputPlaceholder: 'Enter reason for return',
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                    cancelButtonText: 'Cancel',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Please enter a reason for return';
+                        }
+                    }
+                });
+
+                let requestBody;
+
+                if (reason) {
+                    requestBody = {
+                        reason: reason,
+                    };
+                }
+
+                const returnConfirmation = await fetch(`/profile/myOrders/returninit/${orderId}/${productId}/${orderItemId}`,{
+                    method:'post',
+                    headers:{
+                        'content-Type':'application/json'
+                    },
+                    body:JSON.stringify(requestBody)
+                });
+
+                const data = await returnConfirmation.json();
+
+                if(returnConfirmation.ok){
+                    console.log('the request made is successful')
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setInterval(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
+
+            } catch (error) {
+                console.error('Error returning order:', error);
+            }
+        }
+    </script>
+</body>
+</html>

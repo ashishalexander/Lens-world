@@ -1,0 +1,19 @@
+
+
+body {
+    background-color: rgb(255, 254, 254);
+}
+
+.text {
+    font-family: 'The Nautigal', cursive;
+    font-size: 35px;
+    color: rgb(147, 7, 124);
+    letter-spacing: 2px;
+    font-weight: bolder;
+}
+
+.card {
+    margin-top: 20%;
+    background-color: #f8d7da; /* Light red, or choose a color that complements the text */
+}
+

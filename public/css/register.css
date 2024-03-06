@@ -1,0 +1,33 @@
+
+.custom-brand{
+    font-family: 'The Nautigal', cursive;
+    font-size: 30px;
+    color:hsl(310, 91%, 30%);
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+.container{
+    margin-top: 100px;
+    
+}
+
+body{
+    background-color: rgb(233, 239, 245);
+    padding-bottom: 100px;
+}
+
+.card{
+    max-height: 80%;
+}
+.text-body{
+    color: rgb(255, 255, 255);
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+}
+.form-control {
+    height: 10px; /* Adjust the height to your preference */
+    font-size:15px
+}

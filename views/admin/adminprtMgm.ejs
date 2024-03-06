@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- DataTable HEADER-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+
+
+    <title>Document</title>
+    <style>
+      .card {
+        width: 5rem;
+        border: 1px solid;
+      }
+      .navbar-brand {
+        font-family: 'The Nautigal', cursive;
+        font-size: 30px;
+        color: rgb(147, 7, 124);
+        letter-spacing: 2px;
+        font-weight: bold;
+      }    
+      .admin-nav {
+        background-color: rgb(246, 135, 95);
+      }
+      .prtmgm {
+        margin-top: 10px;
+      }
+    </style>
+</head>
+<body>
+    <%- include('adminNav.ejs') %>
+    <div class="container-flex">
+        <div class="container-fluid d-flex  p-0">
+            <%- include('adminSidebar.ejs') %>
+            <div class="container-fluid flex-coloum">
+                <div class="text-center">
+                    <p style="font-size:larger;font-weight: 700;">Product Management</p>
+                </div>
+                <div class="things">
+                    <div class="search-container justify-content-between d-flex align-items-center mt-2">
+                        <!-- <form action="/admin/productMgm" method="GET">
+                            <input type="search" name="search" id="search-input" class="search-input" placeholder="Search...">
+                        </form> -->
+                       
+                        <a href="/admin/addProduct">
+                            <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                Add new product
+                            </button>
+                        </a>
+                    </div>
+                    <div class="prtmgm">
+                        <!-- <table class="table table-borderless table-striped"> -->
+                        <table id="example" class="table table-striped" style="width:100%">
+     
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">name</th>
+                                    <th scope="col">image</th>
+                                    <th scope="col">description</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">category</th>
+                                    <th scope="col">quantity</th>
+                                    <th scope="col">price</th>
+                                    <th scope="col">update</th>
+                                    <th scope="col">remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% productMgm.forEach((element) => { %>
+                                    <tr>
+                                        <td><%= element.name %></td>
+                                        <td><img src="/<%= element.imageUrl[0] %>" class="card" alt="...."></td>
+                                        <td><%= element.description %></td>
+                                        <td><%= element.brand %></td>
+                                        <td><%= element.category %></td>
+                                        <td><%= element.quantity %></td>
+                                        <td><%= element.price %></td>
+                                        <td>
+                                            <a href="/admin/update/<%= element._id %>">
+                                                <button type="button" class="btn btn-outline-warning">
+                                                    Update
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/delete/<%= element._id %>">
+                                                <button type="button" class="<%= element.isdeleted ? 'btn btn-outline-success' : 'btn btn-outline-danger' %>" style="width: 75px;">
+                                                    <%= element.isdeleted ? 'list' : 'unlist' %>
+                                                </button>
+                                            </a>                                        
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+       
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.js"></script>  
+<script>
+   new DataTable('#example');
+   
+  </script>
+</html>

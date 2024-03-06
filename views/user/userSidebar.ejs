@@ -1,0 +1,116 @@
+
+<body>
+    <section>
+        <div class="sidebar p-3" style="width:300px;margin:0px">
+            <form class="filter-form p-0" id="filterForm">
+                <div class="form-group  mt-3">
+                    <label for="brand">Select Brand:</label>
+                    <select class="form-control mt-2" name="brand" id="brand">
+                        <option value="">All Brands</option>
+                        <!-- Loop through brands and generate options -->
+                        <% brand.forEach(element => { %>
+                            <option value="<%= element %>"><%= element %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="form-group mt-3 ">
+                    <label for="priceRange">Price Range:</label>
+                    <div class="input  p-1">
+                        <input type="number" class="form-control mt-2" name="minPrice" id="minPrice"
+                            placeholder="Min Price" min="0">
+                        
+                        <input type="number" class="form-control mt-2" name="maxPrice" id="maxPrice"
+                            placeholder="Max Price" min="0">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4" style="width:100%">Apply Filter</button>
+            </form>
+        </div>
+    </section>
+<!-- Update the script to handle pagination and updateUI function -->
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const filterForm = document.getElementById('filterForm');
+
+        filterForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get the form elements by their IDs
+            const brand = document.getElementById('brand').value;
+            const minPrice = document.getElementById('minPrice').value;
+            const maxPrice = document.getElementById('maxPrice').value;
+
+            // Get the selected category from the navbar if available
+            const activeCategory = document.querySelector('.navbar-nav .nav-item.active a');
+            const category = activeCategory ? activeCategory.innerText.trim() : '';
+
+            try {
+                // Construct the form data object
+                const formData = {
+                    brand,
+                    minPrice,
+                    maxPrice,
+                    category
+                };
+
+                // Send the form data to the server
+                const response = await fetch('/products/ApplyFilter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit form');
+                }
+
+                // Process the response if needed
+                const filteredProducts = await response.json();
+                updateUI(filteredProducts);
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
+        });
+    });
+
+    async function updateUI(products) {
+        // Clear existing products from the UI
+        const productListContainer = document.querySelector('.prtlistcontainer');
+        productListContainer.innerHTML = '';
+
+        const productListContainerpage = document.querySelector('.pagination');
+        productListContainerpage.innerHTML = ''; 
+
+        // Check if there are any products to display
+        if (products.length === 0) {
+            productListContainer.innerHTML = '<p>No products found.</p>';
+            return;
+        }
+
+        // Iterate over the filtered products and create HTML for each product card
+        products.forEach(product => {
+            const productCardHtml = `
+                <div class="col-4 col-sm-4 col-md-4 col-lg-4 mt-3">
+                    <div class="card" style="height:420px">
+                        <div class="card-img h-100">
+                            <img src="/${product.imageUrl[0]}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <p>${product.name}</p>
+                            <p>${product.brand}</p>
+                            <p>${product.price}</p>
+                            <a href="/products/productDetailPg/${product._id}"><button type="button" class="btn btn-primary">Buy Now</button></a>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Append the product card HTML to the container
+            productListContainer.innerHTML += productCardHtml;
+        });
+    }
+</script>
+
+</body>

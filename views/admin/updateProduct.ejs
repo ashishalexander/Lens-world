@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Document</title>
+    <style>
+        .prtimage {
+            width: 5rem;
+            border: 1px;
+        }
+        body{
+            margin:0px;
+            padding:0px;
+        }
+        
+    </style>
+</head>
+<body>
+    <%- include('adminNav') %>
+    <div class="container-fluid d-flex p-0">
+        <%- include('adminSidebar') %>
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-4 col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="addProductForm" action="/admin/productDetailAddProduct/<%= prt._id %>" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Product Name:</label>
+                                    <input type="text" id="name" name="name" class="form-control" value="<%= prt.name %>" >
+                                    <!-- Display validation message below the input -->
+                                    <small id="nameError" class="text-danger"></small>
+                                </div>
+    
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Product Description:</label>
+                                    <textarea id="description" name="description" class="form-control" required><%= prt.description %></textarea>
+                                    <!-- No need for validation message for description as it's a textarea -->
+                                </div>
+    
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Product Price:</label>
+                                    <input type="number" id="price" name="price" class="form-control" value="<%= prt.price %>" >
+                                    <!-- Display validation message below the input -->
+                                    <small id="priceError" class="text-danger"></small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="offer" class="form-label">Product Offer:</label>
+                                    <input type="number" id="offer" name="offer" class="form-control" value="<%= prt.offer %>" >
+                                    <small id="offerError" class="text-danger"></small>
+                                </div>
+    
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Product Quantity:</label>
+                                    <input type="number" id="quantity" name="quantity" class="form-control" value="<%= prt.quantity %>" >
+                                    <!-- Display validation message below the input -->
+                                    <small id="quantityError" class="text-danger"></small>
+                                </div>
+    
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">Product Category:</label>
+                                    <select id="category" name="category" class="form-select" >
+                                        <% category1.forEach(element => { %>
+                                            <% if (element.name === prt.category) { %>
+                                                <option value="<%= element.name %>" selected><%= element.name %></option>
+                                            <% } else { %>
+                                                <option value="<%= element.name %>"><%= element.name %></option>
+                                            <% } %>
+                                        <% }) %>
+                                    </select>
+                                    <!-- No need for validation message for category as it's a dropdown -->
+                                </div>
+    
+                                <div class="mb-3">
+                                    <label for="brand" class="form-label">Brand:</label>
+                                    <input type="text" id="brand" name="brand" class="form-control" value="<%= prt.brand %>" >
+                                    <!-- Display validation message below the input -->
+                                    <small id="brandError" class="text-danger"></small>
+                                </div>
+    
+                                <div class="mb-3">
+                                    <label for="existingImages" class="form-label">Existing Images:</label>
+                                    <div class="d-flex  flex-wrap" id="imageContainer">
+                                        <% prt.imageUrl.forEach((image, index) => { %>
+                                            <div class="ms-2 image-item" data-index="<%= index %>">
+                                                <img src="/<%= image %>" alt="Product Image" class="prtimage">
+                                                <span class="close-btn" onclick="deleteImage('<%= prt._id %>', '<%= index %>')">&#10006;</span>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                </div>
+    
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Product Image:</label>
+                                    <input type="file" id="image" multiple name="image" class="form-control" accept="image/*" onchange="previewImages(this.files)">
+    
+                                    <div id="image-preview-container" class=" mt-2"></div>
+    
+                                </div>
+    
+                                <button type="submit" class="btn btn-primary">Add Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        function validateForm() {
+            // Get input values
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+            const quantity = document.getElementById('quantity').value;
+            const brand = document.getElementById('brand').value;
+            const offer = document.getElementById('offer').value;
+
+
+
+            // Reset previous error messages
+            document.getElementById('nameError').innerText = '';
+            document.getElementById('priceError').innerText = '';
+            document.getElementById('quantityError').innerText = '';
+            document.getElementById('brandError').innerText = '';
+            document.getElementById('offerError').innerText = '';
+
+            
+
+            // Validate required fields
+            if (!name) {
+                document.getElementById('nameError').innerText = 'Product Name is required';
+                return false;
+            }
+
+            if (!price) {
+                document.getElementById('priceError').innerText = 'Product Price is required';
+                return false;
+            }
+            // Validate offer
+            if (parseFloat(offer) < 0) {
+                document.getElementById('offerError').innerText = 'Offer price cannot be negative';
+                return false;
+            }
+
+            if (parseFloat(offer) >= parseFloat(price)) {
+                document.getElementById('offerError').innerText = 'Offer price must be less than the actual price';
+                return false;
+            }
+
+            if (!quantity) {
+                document.getElementById('quantityError').innerText = 'Product Quantity is required';
+                return false;
+            }
+
+            if (!brand) {
+                document.getElementById('brandError').innerText = 'Brand is required';
+                return false;
+            }
+
+            // Validate price and quantity
+            if (parseFloat(price) < 0) {
+                document.getElementById('priceError').innerText = 'Price cannot be negative';
+                return false;
+            }
+
+            if (parseInt(quantity) < 0) {
+                document.getElementById('quantityError').innerText = 'Quantity cannot be negative';
+                return false;
+            }
+
+            return true;
+        }
+
+        async function deleteImage(prtid, index) {
+            const imageItem = document.querySelector(`.image-item[data-index="${index}"]`);
+
+            // Send a fetch request to the server to delete the image
+            try {
+                const response = await fetch(`/admin/deleteImage/${prtid}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ index }), // Send the index of the image to delete
+                });
+
+                if (response.ok) {
+                    // If the server successfully deleted the image, remove it from the DOM
+                    imageItem.remove();
+                } else {
+                    console.error('Failed to delete image from the server');
+                }
+            } catch (error) {
+                console.error('Error deleting image:', error);
+            }
+
+            
+        }
+
+        function previewImages(files) {
+                const previewContainer = document.getElementById('image-preview-container');
+                previewContainer.innerHTML = '';
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const preview = document.createElement('div');
+                        preview.classList.add('image-item');
+
+                        const image = document.createElement('img');
+                        image.classList.add('image-preview');
+                        image.src = e.target.result;
+
+                        const closeButton = document.createElement('button');
+                        closeButton.classList.add('close-btn');
+                        closeButton.innerHTML = '&times;';
+                        closeButton.addEventListener('click', function() {
+                            removeImage(preview, file);
+                        });
+
+                        preview.appendChild(image);
+                        preview.appendChild(closeButton);
+
+                        previewContainer.appendChild(preview);
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+        }
+        function removeImage(preview, file) {
+            const previewContainer = document.getElementById('image-preview-container');
+            previewContainer.removeChild(preview);
+
+            // Remove the corresponding file from the input
+            const input = document.getElementById('image');
+            const files = Array.from(input.files);
+            const index = files.indexOf(file);
+            if (index > -1) {
+                files.splice(index, 1);
+            }
+            // Create a new FileList object with the updated files array
+            const newFileList = new DataTransfer();
+            files.forEach(file => newFileList.items.add(file));
+            // Update the input's files property with the new FileList
+            input.files = newFileList.files;
+        }
+
+        
+    </script>
+</body>
+</html>

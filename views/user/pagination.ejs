@@ -1,0 +1,23 @@
+<div class="container-fluid pagination d-flex justify-content-center  mt-3">
+    <ul class="pagination">
+        <% if (pagination.hasPrevPage) { %>
+            <li class="page-item">
+                <a class="page-link" href="?page=<%= pagination.prevPage%>&category=<%=pagination.category%>%>%>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        <% } %>
+        <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+            <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i%>&category=<%=pagination.category%>%>%>"><%= i %></a>
+            </li>
+        <% } %>
+        <% if (pagination.hasNextPage) { %>
+            <li class="page-item">
+                <a class="page-link" href="?page=<%= pagination.nextPage%>&category=<%=pagination.category%>%>%>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <% } %>
+    </ul>
+</div>

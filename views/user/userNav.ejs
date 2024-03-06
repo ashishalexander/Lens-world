@@ -1,0 +1,154 @@
+
+<head>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://kit.fontawesome.com/52f2c75ad6.js" crossorigin="anonymous"></script>
+    <style>
+        .navbar-brand {
+            margin-left: 70px;
+        }
+
+        .navbar-nav {
+            margin-right: 70px;
+        }
+        .navbar-nav .nav-item.active a{
+            color: rgb(32, 2, 255); 
+            border-bottom: 2px solid rgb(12, 33, 197);
+            
+            
+        }
+        .custom-navbar-brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 30px;    
+            color: rgb(147, 7, 124);
+            letter-spacing: 2px;
+            font-weight: bold;
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar container-fluid  navbar-expand-lg bg-light">
+        <a class="navbar-brand mb-0 h1 custom-navbar-brand " href="/userDashboard">lensWorld</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  me-auto mb-2 mb-lg-0">
+                <form class="d-flex" id="searchForm" role="search">
+                    <input class="form-control me-2" id="searchTerm" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </ul>
+           
+
+            <ul class="navbar-nav me-auto">
+                 <% categ.forEach(element => { %>
+                    <% if (!element.deleted) { %>
+                        <li class="nav-item ms-2">
+                            <a class="nav-link active" aria-current="page"
+                                href="/products/dynamicProductListing/?category=<%= element.name %>"><%= element.name %></a>
+                        </li>
+                     
+                    <% } %>
+                    
+                 <% }) %>
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+               <% if(session){%>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Account
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/profile/displayAccountDetails">User Profile</a></li>
+                      <li><a class="dropdown-item" href="/logout">Logout</a></li>
+
+                    </ul>
+                </li>
+               <%}else{%>
+                    <a href="/userRegister"><button type="button" class="btn btn-primary me-4" style="width:100px">Login</button>
+                    </a>
+              <% } %>
+               
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart/getCart"><i class="fa-sharp fa-solid fa-cart-shopping fa-lg"></i></a>
+                </li>
+
+            </ul>
+
+
+
+        </div>
+    </nav>
+
+    <script>
+      
+        document.addEventListener("DOMContentLoaded", function () {
+            const url = window.location.href;
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-item a');
+
+            navLinks.forEach(link => {
+                if (url.includes(link.href)) {
+                    link.parentElement.classList.add('active');
+                }
+            });
+        });
+    </script>
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const searchTerm = document.getElementById('searchTerm').value.trim();
+          console.log(searchTerm)
+          if (searchTerm === '') return; // Don't search if the input is empty
+    
+          try {
+            const response = await fetch(`/products/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+            if (!response.ok) {
+              throw new Error('Failed to fetch products');
+            }
+            const products = await response.json();
+            // updateUI(products)
+            window.location.href="/products/searcheditem"
+            newdata(products)
+          } catch (error) {
+            console.error('Error searching products:', error);
+          }
+        });
+        
+        // async function newdata(products) {
+        //     try {
+        //         const response = await fetch("/products/searcheditem", {
+        //             method: 'POST', // or 'GET' depending on your server route
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //                 // Add any other headers if needed
+        //             },
+        //             body: JSON.stringify(products) // Assuming you want to send the products as the request body
+        //         });
+    
+        //         if (!response.ok) {
+        //             throw new Error('Failed to fetch new data');
+        //         }
+                
+        //         window.location.href="products"
+        //         // const data = await response.json();
+        //         // Process the received data as needed
+        //         // console.log('Received data:', data);
+        //     } catch (error) {
+        //         console.error('Error fetching new data:', error);
+        //     }
+        // }
+    </script>
+    
+   
+    
+</body>
+
+</html>

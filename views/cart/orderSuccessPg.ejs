@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success - Your Website Name</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/successPg.css">
+</head>
+<body>
+    <%- include('../user/userNav') %>
+    <div class="container">
+        <div class="confirmation-message">
+            <h1>Thank You for Your Order!</h1>
+            <p>Your order has been successfully placed.</p>
+        </div>
+        <div class="order-details">
+            <p>Order Number: <span>#123456</span></p>
+            <p>Order Date: <span><%= latestOrder.orderDate %></span></p>
+            <p>Total Amount:<i class="fa-solid fa-indian-rupee-sign"></i>  <span><%= latestOrder.totalPrice %></span></p>
+        </div>
+        <div class="next-steps">
+            <p>Your order is being processed. We will notify you once it's shipped.</p>
+            <p>For any questions, please contact our <a href="#">customer support</a>.</p>
+        </div>
+        <div class="cta">
+            <a href="/userDashboard" class="btn">Continue Shopping</a>
+        </div>
+    </div>
+    <%- include('../user/userFooter') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Coupon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <!-- Include navigation and sidebar if needed -->
+    <%- include('../admin/adminNav') %>
+    <div class="container-fluid d-flex p-0">
+        <%- include('../admin/adminSidebar') %>
+        <div class="card p-4 mt-5" style="width:800px;margin-left: 300px;">
+
+        <h3 class="mb-4 text-center">Create New Coupon</h3>
+
+        <form action="/coupon/newCouponPost" method="post" id="couponForm">
+            <!-- Coupon Code -->
+            <div class="form-group mb-3">
+                <label for="code">Coupon Code:</label>
+                <input type="text" class="form-control" id="code" name="code">
+                <small class="text-danger" id="codeError"></small>
+            </div>
+
+            <!-- Discount Type -->
+            <div class="form-group mb-3">
+                <label for="discountType">Discount Type:</label>
+                <select class="form-control" id="discountType" name="discountType">
+                    <option value="" disabled selected>Select discount type</option>
+                    <option value="percentage">percentage</option>
+                </select>
+                <small class="text-danger" id="discountTypeError"></small>
+            </div>
+
+            <!-- Discount Amount -->
+            <div class="form-group mb-3">
+                <label for="discountAmount">percentage discount :</label>
+                <input type="number" class="form-control" id="discountAmount" name="discountAmount">
+                <small class="text-danger" id="discountAmountError"></small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="startDate">Start Date :</label>
+                <input type="date" class="form-control" id="startDate" name="startDate">
+                <small class="text-danger" id="startDateError"></small>
+            </div>
+
+           <!-- End Date -->
+            <div class="form-group mb-3">
+                <label for="endDate">End Date :</label>
+                <input type="date" class="form-control" id="endDate" name="endDate">
+                <small class="text-danger" id="endDateError"></small>
+            </div>
+
+            <!-- Minimum Cart Amount -->
+            <div class="form-group mb-4">
+                <label for="minCartAmount">Minimum Cart Amount (Optional):</label>
+                <input type="number" class="form-control" id="minCartAmount" name="minCartAmount">
+                <small class="text-danger" id="minCartAmountError"></small>
+            </div>
+
+            <!-- Usage Limit -->
+            <div class="form-group mb-4">
+                <label for="usageLimit">Usage Limit (Optional):</label>
+                <input type="number" class="form-control" id="usageLimit" name="usageLimit">
+                <small class="text-danger" id="usageLimitError"></small>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Create Coupon</button>
+
+        </form>
+    </div>
+    <!-- </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+        <script>
+            document.getElementById('couponForm').addEventListener('submit', function (event) {
+                // Reset previous error messages
+                document.getElementById('codeError').textContent = '';
+                document.getElementById('discountTypeError').textContent = '';
+                document.getElementById('discountAmountError').textContent = '';
+                document.getElementById('startDateError').textContent = ''; // Updated error message id
+                document.getElementById('endDateError').textContent = ''; // Updated error message id
+                document.getElementById('minCartAmountError').textContent = ''; // Updated error message id
+                document.getElementById('usageLimitError').textContent = '';
+        
+                // Validate Coupon Code
+                const code = document.getElementById('code').value;
+                if (!code.trim() || code.length > 20) {
+                    document.getElementById('codeError').textContent = 'Please enter a valid coupon code (maximum 20 characters).';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Validate Discount Type
+                const discountType = document.getElementById('discountType').value;
+                if (!discountType) {
+                    document.getElementById('discountTypeError').textContent = 'Please select a discount type.';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Validate Discount Amount
+                const discountAmount = document.getElementById('discountAmount').value;
+                if (!discountAmount.trim() || isNaN(discountAmount) || parseFloat(discountAmount) < 0 ||parseFloat(discountAmount)>=100) {
+                    document.getElementById('discountAmountError').textContent = 'Please enter a valid non-negative discount amount.';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Validate Start Date
+                const startDate = document.getElementById('startDate').value;
+                if (!startDate) {
+                    document.getElementById('startDateError').textContent = 'Please enter a valid start date.';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Validate End Date
+                const endDate = document.getElementById('endDate').value;
+                if (!endDate) {
+                    document.getElementById('endDateError').textContent = 'Please enter a valid end date.';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Ensure End Date is after Start Date
+                if (new Date(startDate) >= new Date(endDate)) {
+                    document.getElementById('endDateError').textContent = 'End date must be after start date.';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Validate Minimum Cart Amount
+                const minCartAmount = document.getElementById('minCartAmount').value;
+                if (minCartAmount.trim() && (isNaN(minCartAmount) || parseFloat(minCartAmount) < 0)) {
+                    document.getElementById('minCartAmountError').textContent = 'Please enter a valid non-negative minimum cart amount.';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Validate Usage Limit
+                const usageLimit = document.getElementById('usageLimit').value;
+                if (usageLimit.trim() && (isNaN(usageLimit) || parseInt(usageLimit) < 0)) {
+                    document.getElementById('usageLimitError').textContent = 'Please enter a valid non-negative usage limit.';
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Form is valid, proceed with submission
+                return true;
+            });
+        </script>
+        
+</body>
+
+</html>

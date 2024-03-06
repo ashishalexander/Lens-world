@@ -1,0 +1,33 @@
+
+.custom-navbar-brand{
+    font-family: 'The Nautigal', cursive;
+    font-size: 30px;
+    color:rgb(147, 7, 124);
+    letter-spacing: 2px;
+    font-weight: bold;
+    
+}
+hr {
+    border: 1px solid rgb(0, 0, 0);
+    
+}
+
+    
+#carouselExampleAutoplaying{
+    margin-bottom :15px;
+
+
+}
+.body-content{
+    margin-top : 60px;
+    background-color : white;
+}
+.footer {
+    background-color: rgb(4, 4, 130);
+    color: rgb(255, 255, 255);
+}
+.items {
+    list-style-type: none; 
+    padding: 0; 
+}
+

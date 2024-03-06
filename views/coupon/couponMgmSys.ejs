@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    <style>
+        .dataTables_wrapper{
+            padding: 2%;
+        }
+        .new {
+            width: 150px; /* Adjust the width as needed */
+        }
+       
+    </style>
+</head>
+<body>
+    <%- include('../admin/adminNav') %>
+    <div class="container-fluid d-flex p-0">
+        <%- include('../admin/adminSidebar') %>
+        <div class = "container-fluid p-0">
+            <div class="heading text-center " style="background-color: rgb(233, 233, 232);height: 35px;margin: 0%;">
+                <h3>Coupon Management</h3>
+            </div>
+            <div class="idont" style="height: 80px;">
+                <a href="/coupon/newCoupon"><button type="button" class=" new btn btn-primary mt-4 ms-2">Add a Coupon</button></a>
+            </div>
+            <div calss="card">
+                <table id="example" class="table table-striped " style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Offer Name</th>
+                            <th>Offer Type</th>
+                            <th>percentage offer</th>
+                            <th>Min Cart Amount</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                            <th>Remove</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% data.forEach(element => { %>
+                            <tr>
+                                <td><%= element.code %></td>
+                                <td><%= element.discountType%></td>
+                                <td><%= element.discountAmount%></td>
+                                <td><%= element.minCartAmount%></td>
+                                <td><%= element.startDate.toLocaleDateString()%></td>
+                                <td><%= element.endDate.toLocaleDateString()%></td>
+                                <td><%= (new Date() > new Date(element.endDate)) ? 'Expired' : 'Active' %></td>
+                               <td>
+                                <% if(new Date()< new Date(element.endDate)){%>
+                                    <a href="/coupon/changeStatus/<%= element._id %>">
+                                        <button type="button" class="<%= element.isActive ? "btn btn-outline-warning" : "btn btn-outline-success" %>">
+                                            <%= element.isActive ? "Deactivate" : "  Activate  " %>
+    
+                                        </button>
+                                    </a>
+                               <% } %>
+                                
+                     
+                               </td>
+                               <td><a href= "/coupon/delete/<%= element._id %>">
+                                <button type="button" class="btn btn-outline-danger">
+                                    Delete
+                                </button>
+                               </a></td>
+                            </tr>
+                        <% }) %>
+                        
+                        
+                    </tbody>
+                </table>
+            
+            </div>
+        
+        </div>
+    </div>
+        
+    
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.js"></script>  
+    <script>
+    new DataTable('#example');
+       
+      </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <%- include("userNav") %>
+    <div class="container-fluid d-flex"> 
+        <section>
+            <div class="sidebar p-3" style="width:300px;margin:0px">
+                <form class="filter-form p-0" id="filterForm">
+                    <div class="form-group  mt-3">
+                        <label for="brand">Select Brand:</label>
+                        <select class="form-control mt-2" name="brand" id="brand">
+                            <option value="">All Brands</option>
+                            <!-- Loop through brands and generate options -->
+                            <% brand.forEach(element => { %>
+                                <option value="<%= element %>"><%= element %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="form-group mt-3 ">
+                        <label for="priceRange">Price Range:</label>
+                        <div class="input  p-1">
+                            <input type="number" class="form-control mt-2" name="minPrice" id="minPrice"
+                                placeholder="Min Price" min="0">
+                            
+                            <input type="number" class="form-control mt-2" name="maxPrice" id="maxPrice"
+                                placeholder="Max Price" min="0">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-4" style="width:100%">Apply Filter</button>
+                </form>
+            </div>
+        </section>
+        <div class="container-fluid ">
+            <div class="row ">
+                <% products.forEach(element => { %>
+                    <div class="col col-sm-4 col-md-4 col-lg-4 mt-3">
+                        <div class="card "style="height:420px">
+                            <div class="card-img h-100">
+                                <img src="/<%= element.imageUrl[0] %>" class="card-img-top" alt="...">
+                            </div>
+                            <div class="card-body">
+                                <p><%=element.name%> </p>
+                                <p><%=element.brand%></p>
+                                <p><%=element.price%></p>
+                                <a href="/products/productDetailPg/<%=element._id%> "><button type="button" class="btn btn-primary">Buy Now</button></a>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+    <br>
+    <%- include('userFooter') %>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterForm = document.getElementById('filterForm');
+
+            filterForm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Get the form data
+                const formData = {
+                    brand: document.getElementById('brand').value,
+                    minPrice: document.getElementById('minPrice').value,
+                    maxPrice: document.getElementById('maxPrice').value
+                };
+
+                try {
+                    // Send the form data to the server
+                    const response = await fetch('/products/allFilter', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to filter products');
+                    }
+
+                    // Process the response if needed
+                    const filteredProducts = await response.json();
+                    updateUI(filteredProducts);
+                } catch (error) {
+                    console.error('Error filtering products:', error);
+                }
+            });
+        });
+
+        async function updateUI(products) {
+            const productListContainer = document.querySelector('.row');
+        productListContainer.innerHTML = '';
+
+        if (products.length === 0) {
+            productListContainer.innerHTML = '<p>No products found.</p>';
+            return;
+        }
+
+        products.forEach(product => {
+            const productCardHtml = `
+                <div class="col col-sm-4 col-md-4 col-lg-4 mt-3">
+                    <div class="card "style="height:420px">
+                        <div class="card-img h-100">
+                            <img src="/${product.imageUrl[0]}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <p>${product.name}</p>
+                            <p>${product.brand}</p>
+                            <p>${product.price}</p>
+                            <a href="/products/productDetailPg/${product._id}"><button type="button" class="btn btn-primary">Buy Now</button></a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            productListContainer.innerHTML += productCardHtml;
+        });
+        }
+    </script>
+</body>
+</html>

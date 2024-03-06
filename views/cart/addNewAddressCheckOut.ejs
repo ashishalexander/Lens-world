@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+</head>
+<body>
+    <%- include('../user/userNav') %>
+    <div class="container-fluid d-flex">
+        <div class="sidebar">
+            <%- include('../userProfile/profileSidebar') %>
+        </div>
+        <div class="row ">
+            <div class="col-12 col-sm-12 ">
+                <div class="card"style="margin-left:200px;margin-top:10px" >
+                    <div class="card-body" style="width:900px;background-color: rgb(232, 234, 237);">
+                        <div class="row mb-5">
+                            <div class="col">
+                              <input type="text" class="form-control" name="fname" placeholder="First name" aria-label="First name">
+                            </div>
+                            <div class="col">
+                              <input type="text" class="form-control" name="lname" placeholder="Last name" aria-label="Last name">
+                            </div>
+                        </div>
+                        <div class="col-12 mb-5">
+                            <input type="text" class="form-control" name="inputAddress" id="inputAddress" placeholder="Address">
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col">
+                              <input type="tel" class="form-control" name="mobNo" placeholder="10-Digit Mobile Number" aria-label="mob number">
+                            </div>
+                            <div class="col">
+                              <input type="text" class="form-control" name="pincode"  placeholder="pincode" aria-label="pincode" maxlength="6" pattern="[0-9]*">
+                            </div>
+                        </div>
+
+                        <div class="row mb-5">
+                            <div class="col">
+                              <input type="text" class="form-control" name="city" placeholder="city" aria-label="city">
+                            </div>
+                            <div class="col">
+                              <input type="text" class="form-control" name="state" placeholder="state" aria-label="state">
+                            </div>
+                        </div>
+
+                        <div class="row d-flex ">
+                            <div class="col-12">
+                                <p>Address Type</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="Home" checked>
+                                  <label class="form-check-label" for="gridRadios1">
+                                    Home
+                                  </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 ">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="Work">
+                                  <label class="form-check-label" for="gridRadios2">
+                                    Work
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="row mt-4">
+                            <button type="button" class="btn btn-primary" onclick="save(event)">Save Address</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        async function save(event) {
+            event.preventDefault(); 
+            try {
+                // Get input values
+                var firstName = document.querySelector('input[name="fname"]').value;
+                var lastName = document.querySelector('input[name="lname"]').value;
+                var mobileNumber = document.querySelector('input[name="mobNo"]').value;
+                var pincode = document.querySelector('input[name="pincode"]').value;
+                var address = document.querySelector('input[name="inputAddress"]').value;
+                var addressType = document.querySelector('input[name="gridRadios"]:checked').value;
+                let city = document.querySelector('input[name="city"]').value;
+                let state = document.querySelector('input[name="state"]').value;
+
+                // Prepare data to send
+                var data = {
+                    fname: firstName,
+                    lname: lastName,
+                    mobNo: mobileNumber,
+                    pincode: pincode,
+                    city : city,
+                    state : state,
+                    addressLineOne: address,
+                    gridRadios: addressType
+                };
+
+                // Make a Fetch request
+                const response = await fetch('/cart/addNewAddressCheckOut', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers if needed
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const responseData = await response.json();
+
+                if(response.ok){
+                    window.location.href=("/cart/checkOut")
+                }else{
+                    console.error('HTTP error! Status:', response.status);
+                }
+
+                console.log('Success:', responseData);
+                // Handle success response
+                
+            } catch (error) {
+                console.error('Error:', error);
+                // Handle error
+            }
+        }
+    </script>
+
+</body>
+</html>

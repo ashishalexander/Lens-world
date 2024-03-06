@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+        
+        .sidebar{
+            width:350px;
+            margin:0px;
+            /* height:120vh;  */
+            background-color: rgb(5, 5, 5);
+        }
+        a{
+            text-decoration: none;
+        }
+        p{
+            font-size: 19px;
+            
+        }
+        
+    
+    </style>
+</head>
+<body>
+    <!-- Include your nav and sidebar -->
+    <%- include('adminNav') %>
+    <div class="container-fluid d-flex p-0">
+        <div class="container  sidebar ">
+            <div class="container sidebar-body">
+                <div class="sidebar-content">
+                    <div class="row ">
+                        <div class="col-12 col-sm-12 mt-4">
+                            <a href="#"><p id="home" style="color:rgb(255, 255, 255);" >Home</p></a>
+                        </div>
+                    </div>
+    
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/dashboard"><p style="color:rgb(255, 255, 255)">Dashboard</p></a>
+                        </div>
+                    </div>
+    
+                    <div class="row mt-3">
+                        <div class="col-3 col-sm-12 ">
+                            <a href="/admin/ProductMgm"><p style="color:rgb(255, 255, 255)">Product Management</p></a>
+                        </div>
+                    </div>
+            
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/usermgm"><p style="color:rgb(255, 255, 255)">User Management</p></a>
+                        </div>
+                    </div>
+    
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/categoryMgm"><p style="color:rgb(255, 255, 255)">Category Management</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/orderStatus"><p style="color:rgb(255, 255, 255)">Order Status</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/coupon/couponMgmSys"><p style="color:rgb(255, 255, 255)">Coupon Management</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/bannerMgm"><p style="color:rgb(255, 255, 255)">Banner Management</p></a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 col-sm-12">
+                            <a href="/admin/logout"><p style="color:rgb(255, 255, 255)">Logout</p></a>
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+        <div class="container-fluid d-flex flex-column">
+            <div class="container">
+                <div class="chart-container">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filter
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                            <li><a class="dropdown-item" href="#" data-filter="daily">Daily</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="weekly">Weekly</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="monthly">Monthly</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="yearly">Yearly</a></li>
+                        </ul>
+                    </div>
+                    <canvas id="revenueChart" width="1200px" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="container d-flex justify-content-between mt-5 p-5">
+                <table class="table" style="width:400px;border: 1px solid black;">
+                    <thead>
+                        <tr>
+                            <th colspan="4" class="text-center">
+                                <h5>Best selling Brand</h5>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% bestSellingBrands.forEach(element => { %>
+                            <tr>
+                                <td><%= element._id%></td>
+                                <td><%= element.totalQuantity%></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <div class="chart-container">
+                    <canvas id="paymentMethodChart" width="600" height="400"></canvas>
+                </div>
+                <table class="table" style="width:400px;border: 1px solid black;">
+                    <thead>
+                        <tr>
+                            <th colspan="4" class="text-center">
+                                <h5>Best selling Category</h5>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="col">Category</th>
+                            <th scope="col">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% bestSellingCategories.forEach(element => { %>
+                            <tr>
+                                <td><%= element._id %></td>
+                                <td><%= element.totalQuantity%></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table> 
+            </div>
+            <div class="container d-flex">
+                <!-- <div class="chart-container">
+                    <canvas id="paymentMethodChart" width="600" height="400"></canvas>
+                </div> -->
+                <div class="container">
+                    <table class="table" style="border: 1px solid black;">
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="text-center">
+                                    <h5>Best selling Products</h5>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% bestSellingProducts.forEach(element => { %>
+                                <tr>
+                                    <td><%= element._id %></td>
+                                    <td><%= element.name%></td>
+                                    <td> <img src="/<%= element.imageUrl[0] %>" style="width: 100px; height: auto;" ></td>
+                                    <td><%= element.totalQuantity%></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div> 
+                <div class="chart-container">
+                    <div class="dropdown"></div>
+                    <canvas id="productSalesChart" width="600" height="400"></canvas>
+                </div>  
+         
+            </div>
+           
+        </div> 
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Payment Method Distribution Chart
+            const paymentMethodData = JSON.parse('<%- JSON.stringify(paymentMethodData) %>');
+            const paymentLabels = paymentMethodData.map(item => item._id);
+            const paymentCounts = paymentMethodData.map(item => item.count);
+
+            new Chart(document.getElementById('paymentMethodChart').getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: paymentLabels,
+                    datasets: [{
+                        data: paymentCounts,
+                        backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)'],
+                        borderWidth: 1
+                    }]
+                },  
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Product-wise Sales Chart
+            const productOrderData = JSON.parse('<%- JSON.stringify(productOrderData) %>');
+            const productLabels = productOrderData.map(item => item.productName);
+            const productCounts = productOrderData.map(item => item.totalOrders);
+
+            new Chart(document.getElementById('productSalesChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: productLabels,
+                    datasets: [{
+                        label: 'Total Orders',
+                        data: productCounts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Revenue Line Chart
+            const revenueData = JSON.parse('<%- JSON.stringify(revenueData) %>');
+            const revenueLabels = revenueData.map(item => {
+                if (item.month) {
+                    return `${item.month}/${item.year}`;
+                } else if (item.year) {
+                    return item.year.toString();
+                } else if (item.week) {
+                    return `Week ${item.week}`;
+                } else {
+                    return item.date;
+                }
+            });
+            const revenueValues = revenueData.map(item => item.totalRevenue);
+
+            revenueChart = new Chart(document.getElementById('revenueChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: revenueLabels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: revenueValues,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Event listener for filter dropdown items
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default behavior of anchor elements
+                    const filterType = item.getAttribute('data-filter');
+                    fetchRevenueData(filterType);
+                });
+            });
+        });
+
+        // Function to fetch revenue data based on filter type
+        async function fetchRevenueData(filterType) {
+            try {
+                const response = await fetch(`/admin/dashboard/revenue?filter=${filterType}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch revenue data');
+                }
+                const revenueData = await response.json();
+                updateRevenueChart(revenueData);
+            } catch (error) {
+                console.error('Error fetching revenue data:', error);
+            }
+        }
+
+        function updateRevenueChart(revenueData) {
+            // Parse the revenue data
+            const revenueLabels = revenueData.map(item => {
+                if (item.month) {
+                    return `${item.month}/${item.year}`;
+                } else if (item.year) {
+                    return item.year.toString();
+                } else if (item.week) {
+                    return `Week ${item.week}`;
+                } else {
+                    return item.date;
+                }
+            });
+            const revenueValues = revenueData.map(item => item.totalRevenue);
+
+            // Update the data of the existing revenue chart
+            revenueChart.data.labels = revenueLabels;
+            revenueChart.data.datasets[0].data = revenueValues;
+
+            // Update the chart
+            revenueChart.update();
+        }
+    </script>
+</body>
+</html>
