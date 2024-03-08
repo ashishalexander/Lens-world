@@ -515,19 +515,18 @@ const returnOrderInit = async (req, res) => {
 
 const paymentPending = async (req, res) => {
     try {
-        const { orderId, totalPrice,orderItemId } = req.body;
+        const { orderId, totalPrice, orderItemId } = req.body;
         
-        const useremail = req.session.user
-        const userdata  = await user.findOne({email:useremail})
+        const useremail = req.session.user;
+        const userdata = await user.findOne({ email: useremail });
 
         req.session.pendingPaymentCapture = {
-            orderId:orderId,
-            userid:userdata._id,
-            itemId:orderItemId
-   
-        }
+            orderId: orderId,
+            userid: userdata._id,
+            itemId: orderItemId
+        };
 
-        console.log(req.session.pendingPaymentCapture)
+        console.log(req.session.pendingPaymentCapture);
 
         // Initialize Razorpay instance with your key ID and secret
         const instance = new Razorpay({
@@ -537,7 +536,7 @@ const paymentPending = async (req, res) => {
 
         // Set options for creating a new order
         const options = {
-            amount: totalPrice,  // amount in the smallest currency unit
+            amount: totalPrice*100,  // amount in the smallest currency unit
             currency: 'INR',
             receipt: orderId + Date.now() // Generate a unique receipt ID
         };
@@ -549,9 +548,8 @@ const paymentPending = async (req, res) => {
                 console.error('Error creating Razorpay order:', err);
                 return res.status(500).json({ error: 'Failed to create Razorpay order' });
             }
-            // console.log(order)
             // Send the order details back to the client as a JSON response
-            // res.status(200).json(order);
+            res.status(200).json(order);
         });
     } catch (error) {
         // If an unexpected error occurs, send an error response
@@ -559,7 +557,6 @@ const paymentPending = async (req, res) => {
         res.status(500).json({ error: 'An unexpected error occurred' });
     }
 };
-
 const pendingPaymentCapture = async (req, res) => {
     try {
         const orderId = req.session.pendingPaymentCapture.orderId
