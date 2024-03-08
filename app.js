@@ -68,7 +68,7 @@ app.use('/coupon',couponRouter)
 //   res.status(err.status || 500);
 //   res.render('errorPage/404error');
 // });
-//  fjsdfjdsfjnsdjfn
+
 const PORT = process.env.PORT || 3000; // Default to 3000 if PORT environment variable is not set
 
 app.listen(PORT, () => {
