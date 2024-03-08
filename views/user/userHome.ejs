@@ -17,7 +17,7 @@
     <%- include("userNav") %>
 
     <div class="container body-content">
-        <% if(bannerImgCorousel.isActive==true){%>
+        <% if(bannerImgCorousel && bannerImgCorousel.isActive==true){%>
           <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <% bannerImgCorousel.imageUrl.forEach(element => { %>
@@ -80,7 +80,7 @@
         </div>
 
         <hr>
-        <% if(bannerImgfirst.isActive==true){%>
+        <% if(bannerImgfirst && bannerImgfirst.isActive==true){%>
           <div class="container p-0 mb-4">
             <div row>
               <% bannerImgfirst.imageUrl.forEach(element => { %>
@@ -132,7 +132,7 @@
           <% }) %>
         </div>
         <hr>
-        <% if(bannerImgSecond.isActive==true){%>
+        <% if(bannerImgfirst && bannerImgSecond.isActive==true){%>
           <div class="row g-4 mb-4">
             <% bannerImgSecond.imageUrl.forEach(element => { %>
               <div class="col-12 col-sm-12">
