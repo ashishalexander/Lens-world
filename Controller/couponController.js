@@ -4,7 +4,7 @@ const user = require("../model/user/userModel")
 
 
 async function updateCouponStatus() {
-    console.log("++++++++++-----------++++++++++++++------------+++++++++++")
+   
     const currentDate = new Date();
     try {
         
